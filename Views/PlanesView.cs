@@ -38,7 +38,7 @@ namespace FlyWithUs.Views
             if (planesListView.SelectedItems.Count > 0)
             {
                 PlaneController.Delete(Convert.ToInt16(planesListView.SelectedItems[0].Text));
-                updatePlanesListView();
+                ViewAux.updatePlanesListView(planesListView);
             }
             else
             {
@@ -53,7 +53,7 @@ namespace FlyWithUs.Views
             {
                 if (PlaneController.Insert(planeTypeBox.SelectedIndex + 1, model, planeCompanyBox))
                 {
-                    updatePlanesListView();
+                    ViewAux.updatePlanesListView(planesListView);
                     newPlaneModelInput.Clear();
                     newPlaneModelInput.Focus();
                 }

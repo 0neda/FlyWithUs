@@ -1,6 +1,7 @@
 ﻿using FlyWithUs.Controllers;
 using FlyWithUs.Data;
 using FlyWithUs.Repositories;
+using FlyWithUs.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,47 +19,23 @@ namespace FlyWithUs
         public CompaniesView()
         {
             InitializeComponent();
-            updateCompaniesListView();
+            ViewAux.updateCompaniesListView(companiesListView);
         }
 
+        #region BUTTONS
         private void updateCompaniesList_Click(object sender, EventArgs e)
         {
-            updateCompaniesListView();
-        }
-
-        public void updateCompaniesListView()
-        {
-            companiesListView.Items.Clear();
-
-            CompanyRepository companyRepository = new CompanyRepository();
-            Dataset.Companies.Clear();
-            companyRepository.RetrieveCompanies();
-
-            if (Dataset.Companies.Count > 0)
-            {
-                foreach (var c in Dataset.Companies)
-                {
-                    companiesListView.Items.Add(c.Id.ToString()).SubItems.Add(c.Name);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Ainda não adicionamos nenhuma compania.");
-            }
+            ViewAux.updateCompaniesListView(companiesListView);
         }
 
         private void addCompany_Click(object sender, EventArgs e)
         {
             string name = newCompanyNameInput.Text;
-            if (CompanyController.ValidateName(name))
+            if (CompanyController.Insert(name))
             {
-                CompanyController.Insert(name);
-                updateCompaniesListView();
+                ViewAux.updateCompaniesListView(companiesListView);
                 newCompanyNameInput.Clear();
                 newCompanyNameInput.Focus();
-            } else
-            {
-                MessageBox.Show("Nome inválido!");
             }
         }
 
@@ -67,11 +44,13 @@ namespace FlyWithUs
             if (companiesListView.SelectedItems.Count > 0)
             {
                 CompanyController.Delete(Convert.ToInt16(companiesListView.SelectedItems[0].Text));
-                updateCompaniesListView();
-            } else
+                ViewAux.updateCompaniesListView(companiesListView);
+            }
+            else
             {
                 MessageBox.Show("Selecione o ID da compania que deseja deletar!");
             }
         }
+        #endregion
     }
 }

@@ -112,7 +112,7 @@
             newCompanyNameInput.Size = new Size(727, 16);
             newCompanyNameInput.TabIndex = 6;
             // 
-            // Companies
+            // CompaniesView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -123,7 +123,7 @@
             Controls.Add(addCompany);
             Controls.Add(companiesListView);
             Controls.Add(updateCompaniesList);
-            Name = "Companies";
+            Name = "CompaniesView";
             Text = "Companias";
             ResumeLayout(false);
             PerformLayout();

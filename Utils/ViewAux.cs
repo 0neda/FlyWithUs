@@ -47,5 +47,28 @@ namespace FlyWithUs.Utils
             }
         }
         #endregion
+
+        #region COMPANIES VIEW AUXILIARIES
+        public static void updateCompaniesListView(ListView companiesListView)
+        {
+            companiesListView.Items.Clear();
+
+            CompanyRepository companyRepository = new CompanyRepository();
+            Dataset.Companies.Clear();
+            companyRepository.RetrieveCompanies();
+
+            if (Dataset.Companies.Count > 0)
+            {
+                foreach (var c in Dataset.Companies)
+                {
+                    companiesListView.Items.Add(c.Id.ToString()).SubItems.Add(c.Name);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Ainda não adicionamos nenhuma compania.");
+            }
+        }
+        #endregion
     }
 }

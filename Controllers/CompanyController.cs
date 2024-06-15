@@ -9,9 +9,18 @@ namespace FlyWithUs.Controllers
 {
     internal class CompanyController
     {
-        public static void Insert(string name)
+        public static bool Insert(string name)
         {
-            CompanyRepository.InsertCompany(name);
+            if (ValidateName(name))
+            {
+                CompanyRepository.InsertCompany(name);
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("Nome inválido!");
+                return false;
+            }
         }
 
         public static void Delete(int id)
