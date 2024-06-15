@@ -34,9 +34,11 @@ namespace FlyWithUs.Repositories
                             {
                                 int id = reader.GetInt16("ID");
                                 string model = reader.GetString("MODELO");
+                                string type_db = reader.GetString("TIPO");
+                                Company company = new Company();
+                                planeType type;
 
-                                Plane.planeType type = new Plane.planeType();
-                                switch (reader.GetString("TIPO"))
+                                switch (type_db.ToUpperInvariant())
                                 {
                                     case "HELICÓPTERO":
                                         type = planeType.Helicopter;
@@ -52,7 +54,7 @@ namespace FlyWithUs.Repositories
                                         break;
                                 }
 
-                                Company company = new();
+                                
                                 int companyId = reader.GetInt16("FK_ID_COMPANIA_AEREA");
                                 foreach (var c in Dataset.Companies)
                                 {
@@ -62,7 +64,7 @@ namespace FlyWithUs.Repositories
                                     }
                                 }
 
-                                Plane p = new Plane(id, type, model, company);
+                                Plane p = new (id, type, model, company);
                                 Dataset.Planes.Add(p);
                             }
                         }
@@ -86,31 +88,37 @@ namespace FlyWithUs.Repositories
                     using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
                     {
                         connection.Open();
-                        Database.dbConnected = true;
                         string query = "INSERT INTO AERONAVE (TIPO, MODELO, FK_ID_COMPANIA_AEREA) VALUES (@planeType, @planeModel, @planeCompany)";
-                        MySqlCommand command = new MySqlCommand(query, connection);
-                        command.Parameters.AddWithValue("@planeType", planeType);
-                        command.Parameters.AddWithValue("@planeModel", planeModel);
-                        command.Parameters.AddWithValue("@planeCompany", planeCompany);
+                        using (MySqlCommand command = new MySqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@planeType", planeType);
+                            command.Parameters.AddWithValue("@planeModel", planeModel);
+                            command.Parameters.AddWithValue("@planeCompany", planeCompany);
 
-                        try
-                        {
-                            command.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
+                            try
+                            {
+                                command.ExecuteNonQuery();
+                            }
+                            catch (MySqlException ex)
+                            {
+                                Console.WriteLine($"[ERRO]: {ex.Message}");
+                                throw;
+                            }
                         }
                     }
-                    Database.dbConnected = false;
                 }
                 catch (MySqlException ex)
                 {
                     Console.WriteLine($"[ERRO]: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
                     Database.dbConnected = false;
                 }
             }
         }
+
 
         public static void DeletePlane(int planeId)
         {

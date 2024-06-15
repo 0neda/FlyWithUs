@@ -17,42 +17,43 @@ namespace FlyWithUs.Controllers
             planeRepository.RetrievePlanes();
         }
 
-        public static bool Insert(int type, string model, object companyComboBoxSelectedItem)
+        #region CRUD
+        public static bool Insert(int type, string model, ComboBox companyComboBox)
         {
-            int companyId = 0;
-            if (companyComboBoxSelectedItem != null)
-            {
-                foreach (var c in Dataset.Companies)
-                {
-                    if (c.Name == companyComboBoxSelectedItem.ToString())
-                    {
-                        companyId = c.Id;
-                        if (companyId != 0)
-                        {
-                            PlaneRepository.InsertPlane(type, model, companyId);
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
+            int companyId = ValidateCompany(companyComboBox.SelectedItem.ToString());
+            if (companyId != 0 && companyId != -1)
+                PlaneRepository.InsertPlane(type, model, companyId);
             else
             {
-                MessageBox.Show("Selecione uma compania.");
+                MessageBox.Show("Erro na seleção de compania!");
                 return false;
             }
+            return true;
         }
 
         public static void Delete(int id)
         {
             PlaneRepository.DeletePlane(id);
         }
+        #endregion
 
+        #region VALIDATION METHODS
         public static bool ValidateModel(string model)
         {
             if (string.IsNullOrEmpty(model) || string.IsNullOrWhiteSpace(model))
                 return false;
             return true;
         }
+
+        public static int ValidateCompany(object comboBoxSelectedItem)
+        {
+            foreach(var c in Dataset.Companies)
+            {
+                if (c.Name == comboBoxSelectedItem.ToString())
+                    return c.Id;
+            }
+            return -1;
+        }
+        #endregion
     }
 }

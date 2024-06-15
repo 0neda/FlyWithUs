@@ -2,6 +2,7 @@
 using FlyWithUs.Data;
 using FlyWithUs.Models;
 using FlyWithUs.Repositories;
+using FlyWithUs.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,7 @@ namespace FlyWithUs.Views
         public PlanesView()
         {
             InitializeComponent();
-            updatePlanesListView();
+            ViewAux.updatePlanesListView(planesListView);
 
             planeTypeBox.Items.Add($"{(int)Plane.planeType.Helicopter} - Helicóptero");
             planeTypeBox.Items.Add($"{(int)Plane.planeType.Plane} - Avião");
@@ -31,31 +32,7 @@ namespace FlyWithUs.Views
             }
         }
 
-        public void updatePlanesListView()
-        {
-            planesListView.Items.Clear();
-
-            PlaneRepository planeRepository = new PlaneRepository();
-            Dataset.Planes.Clear();
-            planeRepository.RetrievePlanes();
-
-            if (Dataset.Planes.Count > 0)
-            {
-                foreach (var p in Dataset.Planes)
-                {
-                    ListViewItem item = new ListViewItem(p.Id.ToString());
-                    item.SubItems.Add(p.Model);
-                    item.SubItems.Add(p.Type.ToString());
-                    item.SubItems.Add(p.Company.Name.ToString());
-                    planesListView.Items.Add(item);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Ainda não adicionamos nenhuma aeronave.");
-            }
-        }
-
+        #region BUTTONS
         private void removePlane_Click(object sender, EventArgs e)
         {
             if (planesListView.SelectedItems.Count > 0)
@@ -74,7 +51,7 @@ namespace FlyWithUs.Views
             string model = newPlaneModelInput.Text;
             if (PlaneController.ValidateModel(model) && planeTypeBox.SelectedIndex != null)
             {
-                if (PlaneController.Insert(planeTypeBox.SelectedIndex + 1, model, planeCompanyBox.SelectedItem))
+                if (PlaneController.Insert(planeTypeBox.SelectedIndex + 1, model, planeCompanyBox))
                 {
                     updatePlanesListView();
                     newPlaneModelInput.Clear();
@@ -84,6 +61,7 @@ namespace FlyWithUs.Views
             else
                 MessageBox.Show("Falta selecionar algo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        #endregion
 
         private void planeTypeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
