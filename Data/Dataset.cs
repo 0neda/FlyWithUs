@@ -1,11 +1,11 @@
-﻿using SistemaAviação.Models;
+﻿using FlyWithUs.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SistemaAviação.Data
+namespace FlyWithUs.Data
 {
     internal class Dataset
     {

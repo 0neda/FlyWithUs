@@ -1,4 +1,4 @@
-﻿namespace SistemaAviação.Views
+﻿namespace FlyWithUs.Views
 {
     partial class PlanesView
     {

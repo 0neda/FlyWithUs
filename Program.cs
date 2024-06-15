@@ -1,6 +1,6 @@
-using SistemaAviação.Utils;
+using FlyWithUs.Utils;
 
-namespace SistemaAviação
+namespace FlyWithUs
 {
     internal static class Program
     {

@@ -5,10 +5,10 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using SistemaAviação.Models;
-using static SistemaAviação.Models.Plane;
+using FlyWithUs.Models;
+using static FlyWithUs.Models.Plane;
 
-namespace SistemaAviação.Utils
+namespace FlyWithUs.Utils
 {
     internal class Database
     {

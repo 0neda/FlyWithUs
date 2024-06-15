@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SistemaAviação.Controllers;
-using SistemaAviação.Data;
-using SistemaAviação.Repositories;
-using SistemaAviação.Views;
+using FlyWithUs.Controllers;
+using FlyWithUs.Data;
+using FlyWithUs.Repositories;
+using FlyWithUs.Views;
 
-namespace SistemaAviação
+namespace FlyWithUs
 {
     public partial class MainView : Form
     {

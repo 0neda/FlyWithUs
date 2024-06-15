@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using SistemaAviação.Models;
-using SistemaAviação.Utils;
-using SistemaAviação.Data;
+using FlyWithUs.Models;
+using FlyWithUs.Utils;
+using FlyWithUs.Data;
 using System.Xml.Linq;
-using static SistemaAviação.Models.Plane;
+using static FlyWithUs.Models.Plane;
 
-namespace SistemaAviação.Repositories
+namespace FlyWithUs.Repositories
 {
     internal class PlaneRepository
     {
