@@ -16,12 +16,13 @@ namespace FlyWithUs.Utils
             planesListView.Items.Clear();
 
             PlaneRepository planeRepository = new PlaneRepository();
-            Dataset.Planes.Clear();
+            CompanyRepository companyRepository = new CompanyRepository();
+            string companyName = String.Empty;
             planeRepository.RetrievePlanes();
 
-            if (Dataset.Planes.Count > 0)
+            if (planeRepository.RetrievePlanes() != null && planeRepository.RetrievePlanes().Count > 0)
             {
-                foreach (var p in Dataset.Planes)
+                foreach (var p in planeRepository.RetrievePlanes())
                 {
                     ListViewItem item = new ListViewItem(p.Id.ToString());
                     item.SubItems.Add(p.Model);
@@ -37,7 +38,16 @@ namespace FlyWithUs.Utils
                             item.SubItems.Add("Jato");
                             break;
                     }
-                    item.SubItems.Add(p.Company.Name.ToString());
+
+                    foreach ( var c in companyRepository.RetrieveCompanies())
+                    {
+                        if (c.Id == p.CompanyId)
+                        {
+                            companyName = c.Name;
+                        }
+                    }
+
+                    item.SubItems.Add(companyName);
                     planesListView.Items.Add(item);
                 }
             }
@@ -54,12 +64,11 @@ namespace FlyWithUs.Utils
             companiesListView.Items.Clear();
 
             CompanyRepository companyRepository = new CompanyRepository();
-            Dataset.Companies.Clear();
             companyRepository.RetrieveCompanies();
 
-            if (Dataset.Companies.Count > 0)
+            if (companyRepository.RetrieveCompanies() != null && companyRepository.RetrieveCompanies().Count > 0)
             {
-                foreach (var c in Dataset.Companies)
+                foreach (var c in companyRepository.RetrieveCompanies())
                 {
                     companiesListView.Items.Add(c.Id.ToString()).SubItems.Add(c.Name);
                 }

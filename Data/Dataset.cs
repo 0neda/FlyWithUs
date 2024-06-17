@@ -9,7 +9,6 @@ namespace FlyWithUs.Data
 {
     internal class Dataset
     {
-        public static List<Company> Companies { get; set; } = new List<Company>();
-        public static List<Plane> Planes { get; set; } = new List<Plane>();
+        //public static List<Plane> Planes { get; set; } = new List<Plane>();
     }
 }

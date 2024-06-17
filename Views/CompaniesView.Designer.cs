@@ -125,6 +125,7 @@
             Controls.Add(updateCompaniesList);
             Name = "CompaniesView";
             Text = "Companias";
+            Load += CompaniesView_Load;
             ResumeLayout(false);
             PerformLayout();
         }

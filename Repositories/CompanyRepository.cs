@@ -14,8 +14,9 @@ namespace FlyWithUs.Repositories
 {
     internal class CompanyRepository
     {
-        public void RetrieveCompanies()
+        public List<Company> RetrieveCompanies()
         {
+            List<Company> retCompanies = new List<Company>();
             if (!Database.dbConnected)
             {
                 try
@@ -34,12 +35,12 @@ namespace FlyWithUs.Repositories
                                 int id = reader.GetInt16("Id");
                                 string name = reader.GetString("Nome");
 
-                                Company c = new Company(id, name);
-                                Dataset.Companies.Add(c);
+                                retCompanies.Add(new Company(id, name));
                             }
                         }
                     }
                     Database.dbConnected = false;
+                    return retCompanies;
                 }
                 catch (MySqlException ex)
                 {
@@ -47,6 +48,7 @@ namespace FlyWithUs.Repositories
                     Database.dbConnected = false;
                 }
             }
+            return retCompanies;
         }
 
         public static void InsertCompany(string companyName)

@@ -47,7 +47,8 @@ namespace FlyWithUs.Controllers
 
         public static int ValidateCompany(object comboBoxSelectedItem)
         {
-            foreach(var c in Dataset.Companies)
+            CompanyRepository companyRepository = new CompanyRepository();
+            foreach (var c in companyRepository.RetrieveCompanies())
             {
                 if (c.Name == comboBoxSelectedItem.ToString())
                     return c.Id;

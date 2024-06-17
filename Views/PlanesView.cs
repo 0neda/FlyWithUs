@@ -26,7 +26,9 @@ namespace FlyWithUs.Views
             planeTypeBox.Items.Add($"{(int)Plane.planeType.Plane} - Avião");
             planeTypeBox.Items.Add($"{(int)Plane.planeType.Jet} - Jato");
 
-            foreach ( var c in Dataset.Companies )
+            CompanyRepository companyRepository = new CompanyRepository();
+
+            foreach ( var c in companyRepository.RetrieveCompanies())
             {
                 planeCompanyBox.Items.Add(c.Name);
             }

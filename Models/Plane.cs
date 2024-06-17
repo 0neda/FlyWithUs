@@ -22,14 +22,14 @@ namespace FlyWithUs.Models
         public int Id { get; set; }
         public planeType Type { get; set; }
         public string Model { get; set; }
-        public Company Company { get; set; }
+        public int CompanyId { get; set; }
 
-        public Plane(int id, planeType type, string model, Company company)
+        public Plane(int id, planeType type, string model, int company)
         {
             Id = id;
             Type = type;
             Model = model;
-            Company = company;
+            CompanyId = company;
         }
     }
 }

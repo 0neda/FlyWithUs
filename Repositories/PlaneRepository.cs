@@ -15,8 +15,9 @@ namespace FlyWithUs.Repositories
 {
     internal class PlaneRepository
     {
-        public void RetrievePlanes()
+        public List<Plane> RetrievePlanes()
         {
+            List<Plane> retPlanes = new List<Plane>();
             if (!Database.dbConnected)
             {
                 try
@@ -35,7 +36,6 @@ namespace FlyWithUs.Repositories
                                 int id = reader.GetInt16("ID");
                                 string model = reader.GetString("MODELO");
                                 string type_db = reader.GetString("TIPO");
-                                Company company = new Company();
                                 planeType type;
 
                                 switch (type_db.ToUpperInvariant())
@@ -56,20 +56,14 @@ namespace FlyWithUs.Repositories
 
                                 
                                 int companyId = reader.GetInt16("FK_ID_COMPANIA_AEREA");
-                                foreach (var c in Dataset.Companies)
-                                {
-                                    if (c.Id == companyId)
-                                    {
-                                        company = c;
-                                    }
-                                }
-
-                                Plane p = new (id, type, model, company);
-                                Dataset.Planes.Add(p);
+                                CompanyRepository companyRepository = new CompanyRepository();
+                                Plane p = new (id, type, model, companyId);
+                                retPlanes.Add(p);
                             }
                         }
                     }
                     Database.dbConnected = false;
+                    return retPlanes;
                 }
                 catch (MySqlException ex)
                 {
@@ -77,6 +71,7 @@ namespace FlyWithUs.Repositories
                     Database.dbConnected = false;
                 }
             }
+            return retPlanes;
         }
 
         public static void InsertPlane(int planeType, string planeModel, int planeCompany)

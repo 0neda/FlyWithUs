@@ -52,5 +52,10 @@ namespace FlyWithUs
             }
         }
         #endregion
+
+        private void CompaniesView_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
