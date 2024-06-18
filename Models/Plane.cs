@@ -19,10 +19,10 @@ namespace FlyWithUs.Models
             Jet = 3
         }
 
-        public int Id { get; set; }
-        public planeType Type { get; set; }
-        public string Model { get; set; }
-        public int CompanyId { get; set; }
+        public int? Id { get; set; }
+        public planeType? Type { get; set; }
+        public string? Model { get; set; }
+        public int? CompanyId { get; set; }
 
         public Plane(int id, planeType type, string model, int company)
         {
@@ -30,6 +30,11 @@ namespace FlyWithUs.Models
             Type = type;
             Model = model;
             CompanyId = company;
+        }
+
+        public Plane ()
+        {
+
         }
     }
 }

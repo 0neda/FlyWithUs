@@ -1,5 +1,5 @@
 ﻿using FlyWithUs.Controllers;
-using FlyWithUs.Data;
+
 using FlyWithUs.Models;
 using FlyWithUs.Repositories;
 using FlyWithUs.Utils;
@@ -28,7 +28,7 @@ namespace FlyWithUs.Views
 
             CompanyRepository companyRepository = new CompanyRepository();
 
-            foreach ( var c in companyRepository.RetrieveCompanies())
+            foreach (var c in companyRepository.RetrieveCompanies())
             {
                 planeCompanyBox.Items.Add(c.Name);
             }
@@ -72,7 +72,12 @@ namespace FlyWithUs.Views
 
         private void planeCompanyBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
+        }
+
+        private void PlanesView_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

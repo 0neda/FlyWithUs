@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FlyWithUs.Controllers;
-using FlyWithUs.Data;
+
 using FlyWithUs.Repositories;
 using FlyWithUs.Views;
 
@@ -33,6 +33,12 @@ namespace FlyWithUs
         {
             var planesForm = new PlanesView();
             planesForm.Show();
+        }
+
+        private void SeatsViewButton_Click(object sender, EventArgs e)
+        {
+            var seatsForm = new SeatsView();
+            seatsForm.Show();
         }
     }
 }

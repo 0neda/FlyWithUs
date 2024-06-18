@@ -1,5 +1,4 @@
-﻿using FlyWithUs.Data;
-using FlyWithUs.Models;
+﻿using FlyWithUs.Models;
 using FlyWithUs.Repositories;
 using System;
 using System.Collections.Generic;

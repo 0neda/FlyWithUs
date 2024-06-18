@@ -1,5 +1,5 @@
 ﻿using FlyWithUs.Controllers;
-using FlyWithUs.Data;
+
 using FlyWithUs.Repositories;
 using FlyWithUs.Utils;
 using System;

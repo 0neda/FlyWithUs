@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlyWithUs.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,12 @@ namespace FlyWithUs.Models
 {
     internal class Seat
     {
+        SeatController controller = new SeatController();
         public enum SeatClass
         {
             Eco = 1,
             First = 2,
-            Luxo = 3
+            Deluxe = 3
         }
         public enum SeatLocalization
         {
@@ -24,9 +26,18 @@ namespace FlyWithUs.Models
         }
 
         public int Id { get; set; }
-        public required SeatClass Class { get; set; }
-        public required SeatLocalization Localization { get; set; }
-        public required bool IsVacant { get; set; }
-        public required Plane Plane { get; set; }
+        public SeatClass Class { get; set; }
+        public SeatLocalization Localization { get; set; }
+        public bool IsVacant { get; set; }
+        public Plane Plane { get; set; }
+
+        public Seat (int id, string seatClass, string seatLocalization, bool isVacant, Plane plane)
+        {
+            Id = id;
+            Class = controller.ConvertToSeatClass(seatClass);
+            Localization = controller.ConvertToSeatLocalization(seatLocalization);
+            IsVacant = isVacant;
+            Plane = plane;
+        }
     }
 }
