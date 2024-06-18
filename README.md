@@ -10,3 +10,39 @@ Foi desenvolvido com interface gráfica e com foco em **C#** e também integrado
 *Em suma, utilizamos **C# (Winforms) e MySQL** para desenvolver um aplicativo de gerenciamento de vôos.*
 
 ###### ✍️ Responsáveis:  Alex Rafael Oneda, Layne Laís de Castilho Firmino, Rafaela Correa, Guilherme Schweitzer.
+
+## 📂 Resumo da estrutura e arquivos contidos:
+```
+FlyWithUs
+├── Auxiliares BD (Contém os scripts SQL para auxiliar o programa e criar o BD)
+│   ├── QUERIES-Compania-Aerea.sql
+│   ├── SCHEMA-Compania-Aerea.sql
+│   ├── SEED-Compania-Aerea.sql
+│   └── TRIGGERS-Compania-Aerea.sql
+├── Controllers (Contém os controladores responsáveis por seus repositórios/modelos/etc)
+│   ├── CompanyController.cs
+│   ├── PlaneController.cs
+│   └── SeatController.cs
+├── Models (Responsáveis por conter os modelos de objetos C# em relação ao BD)
+│   ├── Airport.cs
+│   ├── Company.cs
+│   ├── Connection.cs
+│   ├── Customer.cs
+│   ├── Flight.cs
+│   ├── FlightTicket.cs
+│   ├── Plane.cs
+│   ├── Seat.cs
+│   └── Suitcase.cs
+├── Repositories
+│   ├── CompanyRepository.cs
+│   ├── PlaneRepository.cs
+│   └── SeatRepository.cs
+├── Utils (Atualmente contém scripts auxiliares em geral)
+│   ├── Database.cs
+│   └── ViewAux.cs
+└── Views (Contém as visualizações do projeto)
+    ├── MainView.cs
+    ├── CompaniesView.cs
+    ├── PlanesView.cs
+    └── SeatsView.cs
+```
