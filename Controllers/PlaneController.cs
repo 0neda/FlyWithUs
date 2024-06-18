@@ -10,13 +10,8 @@ namespace FlyWithUs.Controllers
 {
     internal class PlaneController
     {
-        public static void Initialize()
-        {
-            PlaneRepository planeRepository = new PlaneRepository();
-            planeRepository.RetrievePlanes();
-        }
-
         #region CRUD
+        // Validamos a compania e então executamos o método de inserção do repositório
         public static bool Insert(int type, string model, ComboBox companyComboBox)
         {
             int companyId = ValidateCompany(companyComboBox.SelectedItem.ToString());
@@ -30,6 +25,7 @@ namespace FlyWithUs.Controllers
             return true;
         }
 
+        // Executamos o método de remoção do repositório
         public static void Delete(int id)
         {
             PlaneRepository.DeletePlane(id);
@@ -37,6 +33,7 @@ namespace FlyWithUs.Controllers
         #endregion
 
         #region VALIDATION METHODS
+        // Validamos a string do modelo da aeronave
         public static bool ValidateModel(string model)
         {
             if (string.IsNullOrEmpty(model) || string.IsNullOrWhiteSpace(model))
@@ -44,6 +41,7 @@ namespace FlyWithUs.Controllers
             return true;
         }
 
+        // Validamos a compania da aeronave
         public static int ValidateCompany(object comboBoxSelectedItem)
         {
             CompanyRepository companyRepository = new CompanyRepository();

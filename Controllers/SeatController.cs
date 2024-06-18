@@ -10,22 +10,7 @@ namespace FlyWithUs.Controllers
 {
     internal class SeatController
     {
-        public List<Seat> RetrieveSeats (Plane plane)
-        {
-            PlaneRepository planeRepository = new PlaneRepository ();
-            SeatRepository seatRepository = new SeatRepository ();
-            List<Seat> retSeats = new List<Seat> ();
-
-            foreach (var p in planeRepository.RetrievePlanes())
-            {
-                foreach (var s in seatRepository.RetrieveSeats())
-                {
-
-                }
-            }
-            return retSeats;
-        }
-
+        // Método para converter a string da classe da poltrona para o ENUM criado
         public Seat.SeatClass ConvertToSeatClass(string seatClass)
         {
             switch (seatClass.ToString().ToUpperInvariant())
@@ -40,6 +25,7 @@ namespace FlyWithUs.Controllers
             return Seat.SeatClass.Eco;
         }
 
+        // Método para converter a string da localização da poltrona para o ENUM criado
         public Seat.SeatLocalization ConvertToSeatLocalization(string seatLocalization)
         {
             switch (seatLocalization.ToString().ToUpperInvariant())

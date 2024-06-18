@@ -12,6 +12,7 @@ namespace FlyWithUs.Repositories
 {
     internal class SeatRepository
     {
+        // Método para retornar uma lista das poltronas contidas atualmente no BD, já convertidas em objeto de acordo com nosso model
         public List<Seat> RetrieveSeats()
         {
             List<Seat> retSeats = new List<Seat>();

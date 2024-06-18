@@ -19,8 +19,6 @@ namespace FlyWithUs
         public MainView()
         {
             InitializeComponent();
-            CompanyController.Initialize();
-            PlaneController.Initialize();
         }
 
         private void companiesButton_Click(object sender, EventArgs e)
@@ -39,6 +37,11 @@ namespace FlyWithUs
         {
             var seatsForm = new SeatsView();
             seatsForm.Show();
+        }
+
+        private void MainView_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

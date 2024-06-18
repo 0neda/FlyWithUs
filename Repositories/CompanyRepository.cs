@@ -13,6 +13,7 @@ namespace FlyWithUs.Repositories
 {
     internal class CompanyRepository
     {
+        // Método para retornar uma lista das companias contidas atualmente no BD, já convertidas em objeto de acordo com nosso model
         public List<Company> RetrieveCompanies()
         {
             List<Company> retCompanies = new List<Company>();
@@ -44,6 +45,7 @@ namespace FlyWithUs.Repositories
             return retCompanies;
         }
 
+        // Método para inserir uma nova compania no BD
         public static void InsertCompany(string companyName)
         {
             try
@@ -71,6 +73,7 @@ namespace FlyWithUs.Repositories
             }
         }
 
+        // Método para deletar uma compania do BD
         public static void DeleteCompany(int companyId)
         {
             try

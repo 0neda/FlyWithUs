@@ -10,6 +10,8 @@ namespace FlyWithUs.Utils
 {
     internal class ViewAux
     {
+        // Aqui estão contidos os métodos auxiliares para as visualizações do software, no momento, estão inseridos os métodos de atualização
+        // de todas as ListView das visualizações, puxando dados do BD e fazendo a conversão em items de lista para serem mostrados ao usuário.
         #region MÉTODOS AUXILIARES PARA AS AERONAVES
         public static void updatePlanesListView(ListView planesListView)
         {

@@ -37,10 +37,9 @@
             // 
             companiesButton.BackColor = Color.DarkGray;
             companiesButton.FlatStyle = FlatStyle.Flat;
-            companiesButton.Location = new Point(14, 65);
-            companiesButton.Margin = new Padding(3, 4, 3, 4);
+            companiesButton.Location = new Point(12, 49);
             companiesButton.Name = "companiesButton";
-            companiesButton.Size = new Size(117, 55);
+            companiesButton.Size = new Size(102, 41);
             companiesButton.TabIndex = 0;
             companiesButton.Text = "Companias";
             companiesButton.UseVisualStyleBackColor = false;
@@ -50,10 +49,9 @@
             // 
             planesButton.BackColor = Color.DarkGray;
             planesButton.FlatStyle = FlatStyle.Flat;
-            planesButton.Location = new Point(137, 65);
-            planesButton.Margin = new Padding(3, 4, 3, 4);
+            planesButton.Location = new Point(120, 49);
             planesButton.Name = "planesButton";
-            planesButton.Size = new Size(117, 55);
+            planesButton.Size = new Size(102, 41);
             planesButton.TabIndex = 1;
             planesButton.Text = "Aeronaves";
             planesButton.UseVisualStyleBackColor = false;
@@ -63,9 +61,10 @@
             // 
             SeatsViewButton.BackColor = Color.PaleGreen;
             SeatsViewButton.FlatStyle = FlatStyle.Flat;
-            SeatsViewButton.Location = new Point(14, 127);
+            SeatsViewButton.Location = new Point(12, 95);
+            SeatsViewButton.Margin = new Padding(3, 2, 3, 2);
             SeatsViewButton.Name = "SeatsViewButton";
-            SeatsViewButton.Size = new Size(240, 100);
+            SeatsViewButton.Size = new Size(210, 75);
             SeatsViewButton.TabIndex = 2;
             SeatsViewButton.Text = "Poltronas";
             SeatsViewButton.UseVisualStyleBackColor = false;
@@ -73,15 +72,15 @@
             // 
             // MainView
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(270, 276);
+            ClientSize = new Size(236, 207);
             Controls.Add(SeatsViewButton);
             Controls.Add(planesButton);
             Controls.Add(companiesButton);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "MainView";
             Text = "FlyWithUs";
+            Load += MainView_Load;
             ResumeLayout(false);
         }
 

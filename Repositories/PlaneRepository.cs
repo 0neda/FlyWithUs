@@ -14,6 +14,7 @@ namespace FlyWithUs.Repositories
 {
     internal class PlaneRepository
     {
+        // Método para retornar uma lista das aeronaves contidas atualmente no BD, já convertidas em objeto de acordo com nosso model
         public List<Plane> RetrievePlanes()
         {
             List<Plane> retPlanes = new List<Plane>();
@@ -66,6 +67,7 @@ namespace FlyWithUs.Repositories
             return retPlanes;
         }
 
+        // Método para inserir uma nova aeronave no BD
         public static void InsertPlane(int planeType, string planeModel, int planeCompany)
         {
             SeatRepository seatRepository = new SeatRepository();
@@ -100,7 +102,7 @@ namespace FlyWithUs.Repositories
             }
         }
 
-
+        // Método para remover uma aeronave do BD
         public static void DeletePlane(int planeId)
         {
             try
