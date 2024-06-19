@@ -9,6 +9,7 @@ using FlyWithUs.Models;
 using FlyWithUs.Utils;
 using System.Xml.Linq;
 using static FlyWithUs.Models.Plane;
+using FlyWithUs.Controllers;
 
 namespace FlyWithUs.Repositories
 {
@@ -52,7 +53,7 @@ namespace FlyWithUs.Repositories
                             }
 
                                 
-                            int companyId = reader.GetInt16("FK_ID_COMPANIA_AEREA");
+                            int companyId = reader.GetInt16("ID_COMPANIA_AEREA");
                             Plane p = new (id, type, model, companyId);
                             retPlanes.Add(p);
                         }
@@ -68,7 +69,7 @@ namespace FlyWithUs.Repositories
         }
 
         // Método para inserir uma nova aeronave no BD
-        public static void InsertPlane(int planeType, string planeModel, int planeCompany)
+        public static bool InsertPlane(int planeType, string planeModel, int planeCompany, ComboBox companyComboBox)
         {
             SeatRepository seatRepository = new SeatRepository();
             try
@@ -76,7 +77,7 @@ namespace FlyWithUs.Repositories
                 using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
                 {
                     connection.Open();
-                    string query = "INSERT INTO AERONAVE (TIPO, MODELO, FK_ID_COMPANIA_AEREA) VALUES (@planeType, @planeModel, @planeCompany)";
+                    string query = "INSERT INTO AERONAVE (TIPO, MODELO, ID_COMPANIA_AEREA) VALUES (@planeType, @planeModel, @planeCompany)";
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@planeType", planeType);
@@ -86,10 +87,12 @@ namespace FlyWithUs.Repositories
                         try
                         {
                             command.ExecuteNonQuery();
+                            return true;
                         }
                         catch (MySqlException ex)
                         {
                             Console.WriteLine($"[ERRO]: {ex.Message}");
+                            return false;
                             throw;
                         }
                     }
@@ -98,6 +101,7 @@ namespace FlyWithUs.Repositories
             catch (MySqlException ex)
             {
                 Console.WriteLine($"[ERRO]: {ex.Message}");
+                return false;
                 throw;
             }
         }

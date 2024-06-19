@@ -19,32 +19,34 @@ namespace FlyWithUs
         public CompaniesView()
         {
             InitializeComponent();
-            ViewAux.updateCompaniesListView(companiesListView);
+            CompanyController.updateCompaniesListView(companiesListView);
         }
 
         #region BUTTONS
         private void updateCompaniesList_Click(object sender, EventArgs e)
         {
-            ViewAux.updateCompaniesListView(companiesListView);
+            CompanyController.updateCompaniesListView(companiesListView);
         }
 
         private void addCompany_Click(object sender, EventArgs e)
         {
             string name = newCompanyNameInput.Text;
-            if (CompanyController.Insert(name))
+            if (CompanyRepository.InsertCompany(name))
             {
-                ViewAux.updateCompaniesListView(companiesListView);
+                CompanyController.updateCompaniesListView(companiesListView);
                 newCompanyNameInput.Clear();
                 newCompanyNameInput.Focus();
             }
+            else
+                MessageBox.Show("Digite um nome para a compania!");
         }
 
         private void removeCompany_Click(object sender, EventArgs e)
         {
             if (companiesListView.SelectedItems.Count > 0)
             {
-                CompanyController.Delete(Convert.ToInt16(companiesListView.SelectedItems[0].Text));
-                ViewAux.updateCompaniesListView(companiesListView);
+                CompanyRepository.DeleteCompany(Convert.ToInt16(companiesListView.SelectedItems[0].Text));
+                CompanyController.updateCompaniesListView(companiesListView);
             }
             else
             {

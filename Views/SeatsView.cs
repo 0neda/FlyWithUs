@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FlyWithUs.Controllers;
+using FlyWithUs.Repositories;
 using FlyWithUs.Utils;
 
 namespace FlyWithUs.Views
@@ -16,12 +18,21 @@ namespace FlyWithUs.Views
         public SeatsView()
         {
             InitializeComponent();
-            ViewAux.updateSeatsListView(seatsListView);
+            SeatController.updateSeatsListView(seatsListView);
         }
 
         private void SeatsView_Load(object sender, EventArgs e)
         {
 
+        }
+
+        //FINALIZAR ABAIXO
+        private void updateSeatStatus_Click(object sender, EventArgs e)
+        {
+            if (seatsListView.SelectedItems.Count == 1)
+            {
+                MessageBox.Show("OK");
+            }
         }
     }
 }

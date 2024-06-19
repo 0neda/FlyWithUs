@@ -34,14 +34,17 @@
             seatVacantHeader = new ColumnHeader();
             seatLocalizationHeader = new ColumnHeader();
             seatPlaneIdHeader = new ColumnHeader();
+            updateSeatStatus = new Button();
             SuspendLayout();
             // 
             // seatsListView
             // 
             seatsListView.Columns.AddRange(new ColumnHeader[] { seatIdHeader, seatClassHeader, seatVacantHeader, seatLocalizationHeader, seatPlaneIdHeader });
-            seatsListView.Location = new Point(12, 161);
+            seatsListView.Location = new Point(10, 121);
+            seatsListView.Margin = new Padding(3, 2, 3, 2);
+            seatsListView.MultiSelect = false;
             seatsListView.Name = "seatsListView";
-            seatsListView.Size = new Size(776, 277);
+            seatsListView.Size = new Size(680, 209);
             seatsListView.TabIndex = 0;
             seatsListView.UseCompatibleStateImageBehavior = false;
             seatsListView.View = View.Details;
@@ -71,12 +74,26 @@
             seatPlaneIdHeader.Text = "Aeronave";
             seatPlaneIdHeader.Width = 371;
             // 
+            // updateSeatStatus
+            // 
+            updateSeatStatus.BackColor = Color.LightBlue;
+            updateSeatStatus.FlatStyle = FlatStyle.Flat;
+            updateSeatStatus.Location = new Point(10, 91);
+            updateSeatStatus.Name = "updateSeatStatus";
+            updateSeatStatus.Size = new Size(114, 25);
+            updateSeatStatus.TabIndex = 2;
+            updateSeatStatus.Text = "Alternar Estado";
+            updateSeatStatus.UseVisualStyleBackColor = false;
+            updateSeatStatus.Click += updateSeatStatus_Click;
+            // 
             // SeatsView
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(700, 338);
+            Controls.Add(updateSeatStatus);
             Controls.Add(seatsListView);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "SeatsView";
             Text = "SeatsView";
             Load += SeatsView_Load;
@@ -91,5 +108,6 @@
         private ColumnHeader seatVacantHeader;
         private ColumnHeader seatLocalizationHeader;
         private ColumnHeader seatPlaneIdHeader;
+        private Button updateSeatStatus;
     }
 }

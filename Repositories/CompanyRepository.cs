@@ -31,8 +31,8 @@ namespace FlyWithUs.Repositories
                         {
                             int id = reader.GetInt16("Id");
                             string name = reader.GetString("Nome");
-
-                            retCompanies.Add(new Company(id, name));
+                            if (Company.ValidateName(name))
+                                retCompanies.Add(new Company(id, name));                            
                         }
                     }
                 }
@@ -46,31 +46,37 @@ namespace FlyWithUs.Repositories
         }
 
         // Método para inserir uma nova compania no BD
-        public static void InsertCompany(string companyName)
+        public static bool InsertCompany(string companyName)
         {
-            try
+            if (Company.ValidateName(companyName))
             {
-                using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+                try
                 {
-                    connection.Open();
-                    string query = "INSERT INTO COMPANIA_AEREA (NOME) VALUES (@companyName)";
-                    MySqlCommand command = new MySqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@companyName", companyName);
+                    using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+                    {
+                        connection.Open();
+                        string query = "INSERT INTO COMPANIA_AEREA (NOME) VALUES (@companyName)";
+                        MySqlCommand command = new MySqlCommand(query, connection);
+                        command.Parameters.AddWithValue("@companyName", companyName);
 
-                    try
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
+                        try
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
                     }
                 }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine($"[ERRO]: {ex.Message}");
+                }
+                return true;
             }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"[ERRO]: {ex.Message}");
-            }
+            else
+                return false;
         }
 
         // Método para deletar uma compania do BD

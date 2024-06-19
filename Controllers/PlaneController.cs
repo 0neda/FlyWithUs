@@ -10,48 +10,49 @@ namespace FlyWithUs.Controllers
 {
     internal class PlaneController
     {
-        #region CRUD
-        // Validamos a compania e então executamos o método de inserção do repositório
-        public static bool Insert(int type, string model, ComboBox companyComboBox)
+        public static void updatePlanesListView(ListView planesListView)
         {
-            int companyId = ValidateCompany(companyComboBox.SelectedItem.ToString());
-            if (companyId != 0 && companyId != -1)
-                PlaneRepository.InsertPlane(type, model, companyId);
+            planesListView.Items.Clear();
+
+            PlaneRepository planeRepository = new PlaneRepository();
+            CompanyRepository companyRepository = new CompanyRepository();
+            string companyName = String.Empty;
+
+            if (planeRepository.RetrievePlanes() != null && planeRepository.RetrievePlanes().Count > 0)
+            {
+                foreach (var p in planeRepository.RetrievePlanes())
+                {
+                    ListViewItem item = new ListViewItem(p.Id.ToString());
+                    item.SubItems.Add(p.Model);
+                    switch (p.Type.ToString())
+                    {
+                        case "Helicopter":
+                            item.SubItems.Add("Helicóptero");
+                            break;
+                        case "Plane":
+                            item.SubItems.Add("Avião");
+                            break;
+                        case "Jet":
+                            item.SubItems.Add("Jato");
+                            break;
+                    }
+
+                    foreach (var c in companyRepository.RetrieveCompanies())
+                    {
+                        if (c.Id == p.CompanyId)
+                        {
+                            companyName = c.Name;
+                        }
+                    }
+
+                    item.SubItems.Add(companyName);
+                    planesListView.Items.Add(item);
+                }
+            }
             else
             {
-                MessageBox.Show("Erro na seleção de compania!");
-                return false;
+                MessageBox.Show("Ainda não adicionamos nenhuma aeronave.");
             }
-            return true;
         }
-
-        // Executamos o método de remoção do repositório
-        public static void Delete(int id)
-        {
-            PlaneRepository.DeletePlane(id);
-        }
-        #endregion
-
-        #region VALIDATION METHODS
-        // Validamos a string do modelo da aeronave
-        public static bool ValidateModel(string model)
-        {
-            if (string.IsNullOrEmpty(model) || string.IsNullOrWhiteSpace(model))
-                return false;
-            return true;
-        }
-
-        // Validamos a compania da aeronave
-        public static int ValidateCompany(object comboBoxSelectedItem)
-        {
-            CompanyRepository companyRepository = new CompanyRepository();
-            foreach (var c in companyRepository.RetrieveCompanies())
-            {
-                if (c.Name == comboBoxSelectedItem.ToString())
-                    return c.Id;
-            }
-            return -1;
-        }
-        #endregion
     }
 }

@@ -10,38 +10,69 @@ namespace FlyWithUs.Controllers
 {
     internal class SeatController
     {
-        // Método para converter a string da classe da poltrona para o ENUM criado
-        public Seat.SeatClass ConvertToSeatClass(string seatClass)
+        public static void updateSeatsListView(ListView seatsListView)
         {
-            switch (seatClass.ToString().ToUpperInvariant())
-            {
-                case "ECONÔMICA":
-                    return Seat.SeatClass.Eco;
-                case "PRIMEIRA CLASSE":
-                    return Seat.SeatClass.First;
-                case "LUXO":
-                    return Seat.SeatClass.Deluxe;
-            };
-            return Seat.SeatClass.Eco;
-        }
+            seatsListView.Items.Clear();
 
-        // Método para converter a string da localização da poltrona para o ENUM criado
-        public Seat.SeatLocalization ConvertToSeatLocalization(string seatLocalization)
-        {
-            switch (seatLocalization.ToString().ToUpperInvariant())
+            PlaneRepository planeRepository = new PlaneRepository();
+            string seatPlaneName = String.Empty;
+
+            if (SeatRepository.RetrieveSeats() != null && SeatRepository.RetrieveSeats().Count > 0)
             {
-                case "JANELA":
-                    return Seat.SeatLocalization.Window;
-                case "CORREDOR":
-                    return Seat.SeatLocalization.Corridor;
-                case "DIREITA":
-                    return Seat.SeatLocalization.Right;
-                case "ESQUERDA":
-                    return Seat.SeatLocalization.Left;
-                case "CENTRO":
-                    return Seat.SeatLocalization.Center;
-            };
-            return Seat.SeatLocalization.Center;
+                foreach (var s in SeatRepository.RetrieveSeats())
+                {
+                    ListViewItem item = new ListViewItem(s.Id.ToString());
+
+                    switch (s.Class.ToString().ToUpperInvariant())
+                    {
+                        case "ECO":
+                            item.SubItems.Add("Econômica");
+                            break;
+                        case "FIRST":
+                            item.SubItems.Add("Primeira Classe");
+                            break;
+                        case "DELUXE":
+                            item.SubItems.Add("Luxo");
+                            break;
+                    }
+
+                    item.SubItems.Add(s.IsVacant ? "Sim" : "Não");
+
+                    switch (s.Localization.ToString().ToUpperInvariant())
+                    {
+                        case "WINDOW":
+                            item.SubItems.Add("Janela");
+                            break;
+                        case "CORRIDOR":
+                            item.SubItems.Add("Corredor");
+                            break;
+                        case "RIGHT":
+                            item.SubItems.Add("Direita");
+                            break;
+                        case "LEFT":
+                            item.SubItems.Add("Esquerda");
+                            break;
+                        case "CENTER":
+                            item.SubItems.Add("Centro");
+                            break;
+                    }
+
+                    foreach (var p in planeRepository.RetrievePlanes())
+                    {
+                        if (p.Id == s.Plane.Id)
+                        {
+                            seatPlaneName = p.Model;
+                        }
+                    }
+
+                    item.SubItems.Add(seatPlaneName);
+                    seatsListView.Items.Add(item);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Ainda não adicionamos nenhuma aeronave.");
+            }
         }
     }
 }

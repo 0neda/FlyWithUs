@@ -9,33 +9,23 @@ namespace FlyWithUs.Controllers
 {
     internal class CompanyController
     {
-        // Validar nome e executar método de inserção da compania do repositório
-        public static bool Insert(string name)
+        public static void updateCompaniesListView(ListView companiesListView)
         {
-            if (ValidateName(name))
+            companiesListView.Items.Clear();
+
+            CompanyRepository companyRepository = new CompanyRepository();
+
+            if (companyRepository.RetrieveCompanies() != null && companyRepository.RetrieveCompanies().Count > 0)
             {
-                CompanyRepository.InsertCompany(name);
-                return true;
+                foreach (var c in companyRepository.RetrieveCompanies())
+                {
+                    companiesListView.Items.Add(c.Id.ToString()).SubItems.Add(c.Name);
+                }
             }
             else
             {
-                MessageBox.Show("Nome inválido!");
-                return false;
+                MessageBox.Show("Ainda não adicionamos nenhuma compania.");
             }
-        }
-
-        // Executar método de remoção do repositório
-        public static void Delete(int id)
-        {
-            CompanyRepository.DeleteCompany(id);
-        }
-
-        // Validação do nome da compania, checamos se não é uma string nula ou vazia.
-        public static bool ValidateName(string name)
-        {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
-                return false;
-            return true;
         }
     }
 }

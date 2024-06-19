@@ -21,5 +21,13 @@ namespace FlyWithUs.Models
         {
 
         }
+
+        // Faz a validação do nome da compania.
+        public static bool ValidateName(string name)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+                return false;
+            return true;
+        }
     }
 }

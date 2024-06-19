@@ -9,7 +9,6 @@ namespace FlyWithUs.Models
 {
     internal class Seat
     {
-        SeatController controller = new SeatController();
         public enum SeatClass
         {
             Eco = 1,
@@ -34,10 +33,44 @@ namespace FlyWithUs.Models
         public Seat (int id, string seatClass, string seatLocalization, bool isVacant, Plane plane)
         {
             Id = id;
-            Class = controller.ConvertToSeatClass(seatClass);
-            Localization = controller.ConvertToSeatLocalization(seatLocalization);
+            Class = ConvertToSeatClass(seatClass);
+            Localization = ConvertToSeatLocalization(seatLocalization);
             IsVacant = isVacant;
             Plane = plane;
+        }
+
+        // Método para converter a string da classe da poltrona para o ENUM criado
+        public Seat.SeatClass ConvertToSeatClass(string seatClass)
+        {
+            switch (seatClass.ToString().ToUpperInvariant())
+            {
+                case "ECONÔMICA":
+                    return Seat.SeatClass.Eco;
+                case "PRIMEIRA CLASSE":
+                    return Seat.SeatClass.First;
+                case "LUXO":
+                    return Seat.SeatClass.Deluxe;
+            };
+            return Seat.SeatClass.Eco;
+        }
+
+        // Método para converter a string da localização da poltrona para o ENUM criado
+        public Seat.SeatLocalization ConvertToSeatLocalization(string seatLocalization)
+        {
+            switch (seatLocalization.ToString().ToUpperInvariant())
+            {
+                case "JANELA":
+                    return Seat.SeatLocalization.Window;
+                case "CORREDOR":
+                    return Seat.SeatLocalization.Corridor;
+                case "DIREITA":
+                    return Seat.SeatLocalization.Right;
+                case "ESQUERDA":
+                    return Seat.SeatLocalization.Left;
+                case "CENTRO":
+                    return Seat.SeatLocalization.Center;
+            };
+            return Seat.SeatLocalization.Center;
         }
     }
 }

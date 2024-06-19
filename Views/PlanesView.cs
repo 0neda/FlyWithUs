@@ -20,7 +20,7 @@ namespace FlyWithUs.Views
         public PlanesView()
         {
             InitializeComponent();
-            ViewAux.updatePlanesListView(planesListView);
+            PlaneController.updatePlanesListView(planesListView);
 
             planeTypeBox.Items.Add($"{(int)Plane.planeType.Helicopter} - Helicóptero");
             planeTypeBox.Items.Add($"{(int)Plane.planeType.Plane} - Avião");
@@ -39,8 +39,8 @@ namespace FlyWithUs.Views
         {
             if (planesListView.SelectedItems.Count > 0)
             {
-                PlaneController.Delete(Convert.ToInt16(planesListView.SelectedItems[0].Text));
-                ViewAux.updatePlanesListView(planesListView);
+                PlaneRepository.DeletePlane(Convert.ToInt16(planesListView.SelectedItems[0].Text));
+                PlaneController.updatePlanesListView(planesListView);
             }
             else
             {
@@ -51,17 +51,32 @@ namespace FlyWithUs.Views
         private void addPlane_Click(object sender, EventArgs e)
         {
             string model = newPlaneModelInput.Text;
-            if (PlaneController.ValidateModel(model) && planeTypeBox.SelectedIndex != null)
+            int planeType = planeTypeBox.SelectedIndex + 1;
+
+            if (Plane.ValidateModel(model))
             {
-                if (PlaneController.Insert(planeTypeBox.SelectedIndex + 1, model, planeCompanyBox))
+                if (planeCompanyBox.SelectedIndex != -1)
                 {
-                    ViewAux.updatePlanesListView(planesListView);
-                    newPlaneModelInput.Clear();
-                    newPlaneModelInput.Focus();
+                    int companyId = Plane.ValidateCompany(planeCompanyBox.SelectedItem.ToString());
+
+                    if (planeTypeBox.SelectedIndex != -1)
+                    {
+                        if (PlaneRepository.InsertPlane(planeType, model, companyId, planeCompanyBox));
+                        {
+
+                            PlaneController.updatePlanesListView(planesListView);
+                            newPlaneModelInput.Clear();
+                            newPlaneModelInput.Focus();
+                        }
+                    }
+                    else
+                        MessageBox.Show("Selecione o tipo da aeronave.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else
+                    MessageBox.Show("Selecione a compania da aeronave.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
-                MessageBox.Show("Falta selecionar algo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Digite o nome do modelo da aeronave.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         #endregion
 
