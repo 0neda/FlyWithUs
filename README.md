@@ -15,11 +15,11 @@ Foi desenvolvido com interface gráfica e com foco em **C#** e também integrado
 ```
 FlyWithUs
 ├── Auxiliares BD (Contém os scripts SQL para auxiliar o programa e criar o BD)
-│   ├── QUERIES-Companhia-Aerea.sql
-│   ├── SCHEMA-Companhia-Aerea.sql
-│   ├── SEED-Companhia-Aerea.sql
-│   └── TRIGGERS-Companhia-Aerea.sql
-├── Controllers (Contém os controladores responsáveis por seus repositórios/modelos/etc)
+│   ├── QUERIES-Sistema-Aviacao.sql
+│   ├── SCHEMA-Sistema-Aviacao.sql
+│   ├── SEED-Sistema-Aviacao.sql
+│   └── TRIGGERS-Sistema-Aviacao.sql
+├── Controllers (Contém os controladores responsáveis pela interação com o usuário)
 │   ├── CompanyController.cs
 │   ├── PlaneController.cs
 │   └── SeatController.cs
@@ -33,13 +33,15 @@ FlyWithUs
 │   ├── Plane.cs
 │   ├── Seat.cs
 │   └── Suitcase.cs
-├── Repositories
+├── Repositories (Responsáveis pelos métodos CRUD)
 │   ├── CompanyRepository.cs
 │   ├── PlaneRepository.cs
 │   └── SeatRepository.cs
+├── Services (Atualmente sem implementação)
+│   ├── SeatServices.cs
 ├── Utils (Atualmente contém scripts auxiliares em geral)
 │   ├── Database.cs
-│   └── ViewAux.cs
+│   └── ViewsHelper.cs
 └── Views (Contém as visualizações do projeto)
     ├── MainView.cs
     ├── CompaniesView.cs
