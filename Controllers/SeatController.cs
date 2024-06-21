@@ -1,78 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlyWithUs.Models;
 using FlyWithUs.Repositories;
+using FlyWithUs.Services;
+using MySql.Data.MySqlClient;
+using FlyWithUs.Utils;
+using static FlyWithUs.Services.SeatServices;
+using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace FlyWithUs.Controllers
 {
-    internal class SeatController
-    {
-        public static void updateSeatsListView(ListView seatsListView)
-        {
-            seatsListView.Items.Clear();
+	internal class SeatController
+	{
+		/* Método para atualizar o DGV com a tabela importada do banco de dados */
+		public static void UpdateSeatsTable(DataGridView dgv, bool filterByPlane, int filterPlaneId = 0)
+		{
+			DataTable SeatsTable = SeatRepository.GetSeatsDataFromDatabase(filterByPlane, filterPlaneId);
+			dgv.DataSource = SeatsTable;
+			UpdateColumns(dgv);
+			dgv.Sort(dgv.Columns["ID"], ListSortDirection.Ascending);
+		}
 
-            PlaneRepository planeRepository = new PlaneRepository();
-            string seatPlaneName = String.Empty;
 
-            if (SeatRepository.RetrieveSeats() != null && SeatRepository.RetrieveSeats().Count > 0)
-            {
-                foreach (var s in SeatRepository.RetrieveSeats())
-                {
-                    ListViewItem item = new ListViewItem(s.Id.ToString());
+		/* Método utilizado para atualizar o modo de AutoSize das colunas de acordo com o Header e conteúdo (assumido pelo header) */
+		public static void UpdateColumns(DataGridView dgv)
+		{
+			foreach (DataGridViewColumn column in dgv.Columns)
+			{
+				switch (column.Name)
+				{
+					case "ID":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+						column.ReadOnly = true;
+						break;
+					case "Classe":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+						column.ReadOnly = true;
+						break;
+					case "Está vaga?":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+						break;
+					case "Localização":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+						column.ReadOnly = true;
+						break;
+					case "Aeronave":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+						column.ReadOnly = true;
+						break;
+					case "Companhia":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+						column.ReadOnly = true;
+						break;
+				}
+			}
+		}
 
-                    switch (s.Class.ToString().ToUpperInvariant())
-                    {
-                        case "ECO":
-                            item.SubItems.Add("Econômica");
-                            break;
-                        case "FIRST":
-                            item.SubItems.Add("Primeira Classe");
-                            break;
-                        case "DELUXE":
-                            item.SubItems.Add("Luxo");
-                            break;
-                    }
 
-                    item.SubItems.Add(s.IsVacant ? "Sim" : "Não");
+		/* Método utilizado para preencher o ComboBox para filtragem por aeronave */
+		public static void FillPlanesFilter(ComboBox planesFilterComboBox)
+		{
+			DataTable PlanesTable = PlaneRepository.GetPlanesDataFromDatabase();
+			planesFilterComboBox.Items.Clear();
+			planesFilterComboBox.Items.Add("* - TODAS AS AERONAVES");
 
-                    switch (s.Localization.ToString().ToUpperInvariant())
-                    {
-                        case "WINDOW":
-                            item.SubItems.Add("Janela");
-                            break;
-                        case "CORRIDOR":
-                            item.SubItems.Add("Corredor");
-                            break;
-                        case "RIGHT":
-                            item.SubItems.Add("Direita");
-                            break;
-                        case "LEFT":
-                            item.SubItems.Add("Esquerda");
-                            break;
-                        case "CENTER":
-                            item.SubItems.Add("Centro");
-                            break;
-                    }
+			foreach (DataRow row in PlanesTable.Rows)
+			{
+				planesFilterComboBox.Items.Add(row["MODELO"].ToString());
+			}
 
-                    foreach (var p in planeRepository.RetrievePlanes())
-                    {
-                        if (p.Id == s.Plane.Id)
-                        {
-                            seatPlaneName = p.Model;
-                        }
-                    }
-
-                    item.SubItems.Add(seatPlaneName);
-                    seatsListView.Items.Add(item);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Ainda não adicionamos nenhuma aeronave.");
-            }
-        }
-    }
+			if (planesFilterComboBox.Items.Count > 0)
+				planesFilterComboBox.SelectedIndex = 0;
+		}
+	}
 }

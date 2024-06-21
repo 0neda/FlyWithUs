@@ -6,6 +6,7 @@ using FlyWithUs.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -20,79 +21,85 @@ namespace FlyWithUs.Views
         public PlanesView()
         {
             InitializeComponent();
-            PlaneController.updatePlanesListView(planesListView);
+            PlaneController.UpdatePlanesTable(planesDataGridView);
+			PlaneController.FillPlaneCompanies(planeCompanyBox);
+			PlaneController.FillPlaneTypes(planeTypeBox);
+		}
 
-            planeTypeBox.Items.Add($"{(int)Plane.planeType.Helicopter} - Helicóptero");
-            planeTypeBox.Items.Add($"{(int)Plane.planeType.Plane} - Avião");
-            planeTypeBox.Items.Add($"{(int)Plane.planeType.Jet} - Jato");
-
-            CompanyRepository companyRepository = new CompanyRepository();
-
-            foreach (var c in companyRepository.RetrieveCompanies())
-            {
-                planeCompanyBox.Items.Add(c.Name);
-            }
-        }
-
-        #region BUTTONS
-        private void removePlane_Click(object sender, EventArgs e)
+		/* Métodos para as chamadas dos botões */
+		#region Botões
+		/* Lógica para remoção de aeronaves já existentes,
+		 * utilizamos funções do repositório e do controller
+		 * e deletamos apenas a aeronave com o checkbox marcado*/
+		private void removePlane_Click(object sender, EventArgs e)
         {
-            if (planesListView.SelectedItems.Count > 0)
-            {
-                PlaneRepository.DeletePlane(Convert.ToInt16(planesListView.SelectedItems[0].Text));
-                PlaneController.updatePlanesListView(planesListView);
-            }
-            else
-            {
-                MessageBox.Show("Selecione o ID da aeronave que deseja deletar!");
-            }
-        }
+			PlaneRepository.DeletePlane(selectedCheckbox);
+			PlaneController.UpdatePlanesTable(planesDataGridView);
 
+		}
+
+		/* Lógica para adição de novas aeronaves, utilizamos try/catch
+		 * para lidar com possíveis erros e lançar
+		 * messageboxes personalizadas de acordo com cada erro. */
         private void addPlane_Click(object sender, EventArgs e)
         {
-            string model = newPlaneModelInput.Text;
-            int planeType = planeTypeBox.SelectedIndex + 1;
+			try
+			{
+				if (planeTypeBox.SelectedIndex == -1)
+				{
+					throw new ArgumentException("Selecione o tipo da aeronave!");
+				}
+				if (string.IsNullOrEmpty(newPlaneModelInput.Text) || string.IsNullOrWhiteSpace(newPlaneModelInput.Text))
+				{
+					throw new ArgumentException("Digite o nome do modelo da aeronave!");
+				}
+				if (CompanyRepository.ConvertCompanyNameToId(planeCompanyBox.SelectedItem.ToString()) == -1)
+				{
+					throw new ArgumentException("Selecione a companhia da aeronave!");
+				}
 
-            if (Plane.ValidateModel(model))
-            {
-                if (planeCompanyBox.SelectedIndex != -1)
-                {
-                    int companyId = Plane.ValidateCompany(planeCompanyBox.SelectedItem.ToString());
+				PlaneRepository.InsertPlane(planeTypeBox.SelectedIndex + 1, newPlaneModelInput.Text, CompanyRepository.ConvertCompanyNameToId(planeCompanyBox.SelectedItem.ToString()));
+				PlaneController.UpdatePlanesTable(planesDataGridView);
 
-                    if (planeTypeBox.SelectedIndex != -1)
-                    {
-                        if (PlaneRepository.InsertPlane(planeType, model, companyId, planeCompanyBox));
-                        {
+				MessageBox.Show("Aeronave adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			catch (ArgumentException ex)
+			{
+				MessageBox.Show(ex.Message, "Erro de Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}", "Erro Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+		#endregion
 
-                            PlaneController.updatePlanesListView(planesListView);
-                            newPlaneModelInput.Clear();
-                            newPlaneModelInput.Focus();
-                        }
-                    }
-                    else
-                        MessageBox.Show("Selecione o tipo da aeronave.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                    MessageBox.Show("Selecione a compania da aeronave.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-                MessageBox.Show("Digite o nome do modelo da aeronave.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        #endregion
+		/* Métodos auxiliares para os checkboxes e células do DGV */
+		#region Checkboxes e Células DGV
+		int selectedCheckbox = -1;
+		/* Método responsável por chamar a "ativação única" dos Checkbox */
+		private void planesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+		{
+			ViewsHelper.SingleCheckbox(e, planesDataGridView, "planeSelection");
+		}
 
-        private void planeTypeBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
+		/* Método responsável por "efetuar" a alteração de checkbox/célula selecionada */
+		private void planesDataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+		{
+			if (planesDataGridView.CurrentCell is DataGridViewCheckBoxCell && planesDataGridView.IsCurrentCellDirty)
+			{
+				planesDataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+			}
+		}
 
-        }
-
-        private void planeCompanyBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void PlanesView_Load(object sender, EventArgs e)
-        {
-
-        }
-    }
+		/* Método responsável por transferir o valor do ID da linha onde o checkbox está marcado */
+		private void planesDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+		{
+			if (e.ColumnIndex == planesDataGridView.Columns["planeSelection"].Index)
+			{
+				selectedCheckbox = ViewsHelper.GetSelectedId(planesDataGridView, "planeSelection");
+			}
+		}
+		#endregion
+	}
 }

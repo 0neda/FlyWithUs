@@ -22,7 +22,7 @@ namespace FlyWithUs.Models
 
         }
 
-        // Faz a validação do nome da compania.
+        // Faz a validação do nome da companhia.
         public static bool ValidateName(string name)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))

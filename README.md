@@ -5,7 +5,7 @@ Projeto em desenvolvimento em conjunto para a matéria de **Programação I** do
 
 O projeto está sendo desenvolvido no modelo de estruturização **MVC (Model-View-Controller)** com intuíto de ser um sistema breve simulando o gerenciamento de vôos, aeroportos, aviões e demais pertencentes.
 
-Foi desenvolvido com interface gráfica e com foco em **C#** e também integrado com um banco de dados *(MySQL)* próprio, desenvolvido para a matéria de **Banco de Dados I**. No projeto utilizamos injeção SQL em conjunto de C# para gerenciar a criação de Companias Aéreas, Aeronaves e visualização em lista para os mesmos e Poltronas.
+Foi desenvolvido com interface gráfica e com foco em **C#** e também integrado com um banco de dados *(MySQL)* próprio, desenvolvido para a matéria de **Banco de Dados I**. No projeto utilizamos injeção SQL em conjunto de C# para gerenciar a criação de Companhias Aéreas, Aeronaves e visualização em lista para os mesmos e Poltronas.
 
 *Em suma, utilizamos **C# (Winforms) e MySQL** para desenvolver um aplicativo de gerenciamento de vôos.*
 
@@ -15,10 +15,10 @@ Foi desenvolvido com interface gráfica e com foco em **C#** e também integrado
 ```
 FlyWithUs
 ├── Auxiliares BD (Contém os scripts SQL para auxiliar o programa e criar o BD)
-│   ├── QUERIES-Compania-Aerea.sql
-│   ├── SCHEMA-Compania-Aerea.sql
-│   ├── SEED-Compania-Aerea.sql
-│   └── TRIGGERS-Compania-Aerea.sql
+│   ├── QUERIES-Companhia-Aerea.sql
+│   ├── SCHEMA-Companhia-Aerea.sql
+│   ├── SEED-Companhia-Aerea.sql
+│   └── TRIGGERS-Companhia-Aerea.sql
 ├── Controllers (Contém os controladores responsáveis por seus repositórios/modelos/etc)
 │   ├── CompanyController.cs
 │   ├── PlaneController.cs

@@ -8,104 +8,97 @@ using MySql.Data.MySqlClient;
 using FlyWithUs.Models;
 using FlyWithUs.Utils;
 using System.Xml.Linq;
+using System.Data;
 
 namespace FlyWithUs.Repositories
 {
     internal class CompanyRepository
     {
-        // Método para retornar uma lista das companias contidas atualmente no BD, já convertidas em objeto de acordo com nosso model
-        public List<Company> RetrieveCompanies()
-        {
-            List<Company> retCompanies = new List<Company>();
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
-                {
-                    connection.Open();
-                    string query = "SELECT * FROM COMPANIA_AEREA";
-                    MySqlCommand command = new MySqlCommand(query, connection);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt16("Id");
-                            string name = reader.GetString("Nome");
-                            if (Company.ValidateName(name))
-                                retCompanies.Add(new Company(id, name));                            
-                        }
-                    }
-                }
-                return retCompanies;
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"[ERRO]: {ex.Message}");
-            }
-            return retCompanies;
-        }
+		/* Método para recuperar as companhias da database */
+		public static DataTable GetCompaniesFromDatabase()
+		{
+			DataTable CompaniesTable = new DataTable();
 
-        // Método para inserir uma nova compania no BD
-        public static bool InsertCompany(string companyName)
-        {
-            if (Company.ValidateName(companyName))
-            {
-                try
-                {
-                    using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
-                    {
-                        connection.Open();
-                        string query = "INSERT INTO COMPANIA_AEREA (NOME) VALUES (@companyName)";
-                        MySqlCommand command = new MySqlCommand(query, connection);
-                        command.Parameters.AddWithValue("@companyName", companyName);
+			using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+			{
+				connection.Open();
 
-                        try
-                        {
-                            command.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                    }
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine($"[ERRO]: {ex.Message}");
-                }
-                return true;
-            }
-            else
-                return false;
-        }
+                string query = @"
+					SELECT
+                        ID AS 'ID',
+						NOME AS 'Nome'
+					FROM COMPANHIA_AEREA;";
 
-        // Método para deletar uma compania do BD
-        public static void DeleteCompany(int companyId)
-        {
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
-                {
-                    connection.Open();
+				MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+				adapter.Fill(CompaniesTable);
+			}
+			return CompaniesTable;
+		}
 
-                    string deleteCompanyString = "DELETE FROM COMPANIA_AEREA WHERE ID = @id";
-                    MySqlCommand deleteCompanyCommand = new MySqlCommand(deleteCompanyString, connection);
-                    deleteCompanyCommand.Parameters.AddWithValue("@id", companyId);
+		/* Método para a remoção de uma companhia da database */
+		public static void DeleteCompany(int companyId)
+		{
+			using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+			{
+				connection.Open();
 
-                    try
-                    {
-                        deleteCompanyCommand.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"[ERRO]: {ex.Message}");
-            }
-        }
-    }
+				try
+				{
+					string deleteQuery = @"
+						DELETE FROM COMPANHIA_AEREA
+						WHERE ID = @companyId;";
+					MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection);
+					deleteCommand.Parameters.AddWithValue("@companyId", companyId);
+					deleteCommand.ExecuteNonQuery();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show($"[ERRO]: {ex.Message}");
+				}
+			}
+		}
+
+		/* Método para a inserção de uma nova companhia na database */
+		public static bool InsertCompany(string name)
+		{
+			bool successState = false;
+			using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+			{
+				connection.Open();
+
+				try
+				{
+					string insertQuery = @"
+						INSERT INTO COMPANHIA_AEREA (NOME)
+						VALUES (@companyName)";
+					MySqlCommand insertCommand = new MySqlCommand(insertQuery, connection);
+					insertCommand.Parameters.AddWithValue("@companyName", name);
+					insertCommand.ExecuteNonQuery();
+					successState = true;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show($"[ERRO]: {ex.Message}");
+				}
+			}
+			return successState;
+		}
+
+		/* Método para converter o nome da companhia em seu respectivo ID de acordo com a database */
+		public static int ConvertCompanyNameToId(string companyName)
+		{
+			int resultId = -1;
+			DataTable CompaniesTable = CompanyRepository.GetCompaniesFromDatabase();
+			foreach (DataRow row in CompaniesTable.Rows)
+			{
+				if (companyName == row["NOME"].ToString())
+				{
+					resultId = Convert.ToInt32(row["ID"].ToString());
+					break;
+				}
+			}
+			return resultId;
+		}
+	}
 }

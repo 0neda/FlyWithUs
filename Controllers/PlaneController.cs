@@ -2,6 +2,8 @@
 using FlyWithUs.Repositories;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,49 +12,66 @@ namespace FlyWithUs.Controllers
 {
     internal class PlaneController
     {
-        public static void updatePlanesListView(ListView planesListView)
+		/* Método para atualizar o DGV com a tabela importada do banco de dados */
+		public static void UpdatePlanesTable(DataGridView dgv)
         {
-            planesListView.Items.Clear();
+			DataTable planesData = PlaneRepository.GetPlanesDataFromDatabase();
+			dgv.DataSource = planesData;
+			UpdateColumns(dgv);
+			dgv.Sort(dgv.Columns["ID"], ListSortDirection.Ascending);
+		}
 
-            PlaneRepository planeRepository = new PlaneRepository();
-            CompanyRepository companyRepository = new CompanyRepository();
-            string companyName = String.Empty;
+		/* Método utilizado para atualizar o modo de AutoSize das colunas de acordo com o Header e conteúdo (assumido pelo header) */
+		public static void UpdateColumns(DataGridView dgv)
+		{
+			foreach (DataGridViewColumn column in dgv.Columns)
+			{
+				switch (column.Name)
+				{
+					case "ID":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+						column.ReadOnly = true;
+						break;
+					case "Tipo":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+						column.ReadOnly = true;
+						break;
+					case "Modelo":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+						column.FillWeight = 3;
+						column.ReadOnly = true;
+						break;
+					case "Companhia":
+						column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+						column.FillWeight = 1;
+						column.ReadOnly = true;
+						break;
+				}
+			}
+		}
 
-            if (planeRepository.RetrievePlanes() != null && planeRepository.RetrievePlanes().Count > 0)
-            {
-                foreach (var p in planeRepository.RetrievePlanes())
-                {
-                    ListViewItem item = new ListViewItem(p.Id.ToString());
-                    item.SubItems.Add(p.Model);
-                    switch (p.Type.ToString())
-                    {
-                        case "Helicopter":
-                            item.SubItems.Add("Helicóptero");
-                            break;
-                        case "Plane":
-                            item.SubItems.Add("Avião");
-                            break;
-                        case "Jet":
-                            item.SubItems.Add("Jato");
-                            break;
-                    }
+		// Função auxiliar para preencher o combobox de companhias
+		public static void FillPlaneCompanies(ComboBox companiesBox)
+		{
+			DataTable CompaniesTable = CompanyRepository.GetCompaniesFromDatabase();
+			companiesBox.Items.Clear();
 
-                    foreach (var c in companyRepository.RetrieveCompanies())
-                    {
-                        if (c.Id == p.CompanyId)
-                        {
-                            companyName = c.Name;
-                        }
-                    }
+			foreach (DataRow row in CompaniesTable.Rows)
+			{
+				companiesBox.Items.Add(row["Nome"].ToString());
+			}
 
-                    item.SubItems.Add(companyName);
-                    planesListView.Items.Add(item);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Ainda não adicionamos nenhuma aeronave.");
-            }
-        }
-    }
+			if (companiesBox.Items.Count > 0)
+				companiesBox.SelectedIndex = 0;
+		}
+
+		// Necessário rever lógica de acordo com database para futuras adições de tipos
+		public static void FillPlaneTypes(ComboBox typesBox)
+		{
+			typesBox.Items.Add("1 - Helicóptero");
+			typesBox.Items.Add("2 - Avião");
+			typesBox.Items.Add("3 - Jato");
+			typesBox.SelectedIndex = 0;
+		}
+	}
 }

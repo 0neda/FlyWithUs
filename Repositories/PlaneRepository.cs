@@ -10,129 +10,98 @@ using FlyWithUs.Utils;
 using System.Xml.Linq;
 using static FlyWithUs.Models.Plane;
 using FlyWithUs.Controllers;
+using System.Data;
 
 namespace FlyWithUs.Repositories
 {
     internal class PlaneRepository
     {
-        // Método para retornar uma lista das aeronaves contidas atualmente no BD, já convertidas em objeto de acordo com nosso model
-        public List<Plane> RetrievePlanes()
-        {
-            List<Plane> retPlanes = new List<Plane>();
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
-                {
-                    connection.Open();
-                    string query = "SELECT * FROM AERONAVE";
-                    MySqlCommand command = new MySqlCommand(query, connection);
+		/* Método para recuperar as aeronaves da database */
+		public static DataTable GetPlanesDataFromDatabase()
+		{
+			DataTable PlanesTable = new DataTable();
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt16("ID");
-                            string model = reader.GetString("MODELO");
-                            string type_db = reader.GetString("TIPO");
-                            planeType type;
+			using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+			{
+				connection.Open();
 
-                            switch (type_db.ToUpperInvariant())
-                            {
-                                case "HELICÓPTERO":
-                                    type = planeType.Helicopter;
-                                    break;
-                                case "AVIÃO":
-                                    type = planeType.Plane;
-                                    break;
-                                case "JATO":
-                                    type = planeType.Jet;
-                                    break;
-                                default:
-                                    type = planeType.Plane;
-                                    break;
-                            }
+				string query = @"
+					SELECT
+						AERONAVE.ID AS 'ID',
+						AERONAVE.TIPO AS 'Tipo',
+						AERONAVE.MODELO AS 'Modelo',
+						COMPANHIA_AEREA.NOME AS 'Companhia'
+					FROM AERONAVE
+					JOIN COMPANHIA_AEREA ON AERONAVE.ID_COMPANHIA_AEREA = COMPANHIA_AEREA.ID;";
 
-                                
-                            int companyId = reader.GetInt16("ID_COMPANIA_AEREA");
-                            Plane p = new (id, type, model, companyId);
-                            retPlanes.Add(p);
-                        }
-                    }
-                }
-                return retPlanes;
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"[ERRO]: {ex.Message}");
-            }
-            return retPlanes;
-        }
+				MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+				adapter.Fill(PlanesTable);
+			}
+			return PlanesTable;
+		}
 
-        // Método para inserir uma nova aeronave no BD
-        public static bool InsertPlane(int planeType, string planeModel, int planeCompany, ComboBox companyComboBox)
-        {
-            SeatRepository seatRepository = new SeatRepository();
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
-                {
-                    connection.Open();
-                    string query = "INSERT INTO AERONAVE (TIPO, MODELO, ID_COMPANIA_AEREA) VALUES (@planeType, @planeModel, @planeCompany)";
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@planeType", planeType);
-                        command.Parameters.AddWithValue("@planeModel", planeModel);
-                        command.Parameters.AddWithValue("@planeCompany", planeCompany);
+		/* Método para a remoção de uma aeronave da database */
+		public static void DeletePlane(int planeId)
+		{
+			using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+			{
+				connection.Open();
 
-                        try
-                        {
-                            command.ExecuteNonQuery();
-                            return true;
-                        }
-                        catch (MySqlException ex)
-                        {
-                            Console.WriteLine($"[ERRO]: {ex.Message}");
-                            return false;
-                            throw;
-                        }
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"[ERRO]: {ex.Message}");
-                return false;
-                throw;
-            }
-        }
+				try
+				{
+					string deleteQuery = @"
+						DELETE FROM AERONAVE
+						WHERE ID = @planeId;";
+					MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection);
+					deleteCommand.Parameters.AddWithValue("@planeId", planeId);
+					deleteCommand.ExecuteNonQuery();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show($"[ERRO]: {ex.Message}");
+				}
+			}
+		}
 
-        // Método para remover uma aeronave do BD
-        public static void DeletePlane(int planeId)
-        {
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
-                {
-                    connection.Open();
+		/* Método para a inserção de uma nova aeronave na database */
+		public static void InsertPlane(int type, string model, int companyId)
+		{
+			using (MySqlConnection connection = new MySqlConnection(Database.connectionString))
+			{
+				connection.Open();
 
-                    string deletePlaneString = "DELETE FROM AERONAVE WHERE ID = @id";
-                    MySqlCommand deletePlaneCommand = new MySqlCommand(deletePlaneString, connection);
-                    deletePlaneCommand.Parameters.AddWithValue("@id", planeId);
+				try
+				{
+					string insertQuery = @"
+						INSERT INTO AERONAVE (TIPO, MODELO, ID_COMPANHIA_AEREA)
+						VALUES (@planeType, @planeModel, @companyId)";
+					MySqlCommand insertCommand = new MySqlCommand(insertQuery, connection);
+					insertCommand.Parameters.AddWithValue("@planeType", type);
+					insertCommand.Parameters.AddWithValue("@planeModel", model);
+					insertCommand.Parameters.AddWithValue("@companyId", companyId);
+					insertCommand.ExecuteNonQuery();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show($"[ERRO]: {ex.Message}");
+				}
+			}
+		}
 
-                    try
-                    {
-                        deletePlaneCommand.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"[ERRO]: {ex.Message}");
-            }
-        }
-    }
+		/* Método para converter o modelo da aeronave em seu respectivo ID de acordo com a database */
+		public static int ConvertPlaneModelToId(string planeModel)
+		{
+			int resultId = -1;
+			DataTable CompaniesTable = PlaneRepository.GetPlanesDataFromDatabase();
+			foreach (DataRow row in CompaniesTable.Rows)
+			{
+				if (planeModel == row["MODELO"].ToString())
+				{
+					resultId = Convert.ToInt32(row["ID"].ToString());
+					break;
+				}
+			}
+			return resultId;
+		}
+	}
 }
