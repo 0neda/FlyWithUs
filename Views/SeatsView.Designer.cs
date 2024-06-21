@@ -66,7 +66,7 @@
 			// 
 			// updateSeatsButton
 			// 
-			updateSeatsButton.BackColor = Color.YellowGreen;
+			updateSeatsButton.BackColor = Color.LightBlue;
 			updateSeatsButton.FlatStyle = FlatStyle.Flat;
 			updateSeatsButton.Location = new Point(12, 12);
 			updateSeatsButton.Name = "updateSeatsButton";
