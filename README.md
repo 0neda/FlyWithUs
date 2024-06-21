@@ -1,3 +1,10 @@
+![Portfolio Badge](https://img.shields.io/badge/Portfolio-%23ff8400?style=for-the-badge&logo=About.me&logoColor=white&labelColor=%23303030)
+![C# Badge](https://img.shields.io/badge/C%23-%231b9100?style=for-the-badge&logo=csharp&logoColor=white&logoSize=auto&labelColor=%23303030)
+![MySQL Badge](https://img.shields.io/badge/MySQL-blue?style=for-the-badge&logo=mysql&logoColor=white&logoSize=auto&labelColor=%23303030&color=blue)
+![GitHub repo size](https://img.shields.io/github/repo-size/0neda/FlyWithUs?style=for-the-badge&logo=files&logoColor=white&logoSize=auto&label=%20&labelColor=%23303030&color=%238800ff)
+
+
+
 
 # FlyWithUs ✈️
 
@@ -5,7 +12,7 @@ Projeto em desenvolvimento em conjunto para a matéria de **Programação I** do
 
 O projeto está sendo desenvolvido no modelo de estruturização **MVC (Model-View-Controller)** com intuíto de ser um sistema breve simulando o gerenciamento de vôos, aeroportos, aviões e demais pertencentes.
 
-Foi desenvolvido com interface gráfica e com foco em **C#** e também integrado com um banco de dados *(MySQL)* próprio, desenvolvido para a matéria de **Banco de Dados I**. No projeto utilizamos injeção SQL em conjunto de C# para gerenciar a criação de Companhias Aéreas, Aeronaves e visualização em lista para os mesmos e Poltronas.
+Foi desenvolvido com interface gráfica e com foco em **C#**, foi também integrado com um banco de dados *(MySQL)* próprio, desenvolvido para a matéria de **Banco de Dados I**. No projeto utilizamos injeção SQL em conjunto de C# para gerenciar a criação de Companhias Aéreas, Aeronaves e visualização em lista para os mesmos e Poltronas.
 
 *Em suma, utilizamos **C# (Winforms) e MySQL** para desenvolver um aplicativo de gerenciamento de vôos.*
 
